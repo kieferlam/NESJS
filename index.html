@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NES Emulator</title>
+    <style>
+        body {
+            background: #333;
+            color: aliceblue;
+            font-family: monospace;
+            font-size: 12pt;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .red{
+            color: red;
+        }
+        .green{
+            color: green;
+        }
+
+        #root{
+            display: flex;
+            flex-direction: row;
+        }
+
+        #memory-view,
+        #rom-view {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+
+        #ram,
+        #rom {
+            display: flex;
+            flex-direction: row;
+            width: 48ch;
+            flex-wrap: wrap;
+        }
+
+        .ram-cell {
+            margin: 0 4px;
+        }
+
+        #cpu-view{
+            border: 1px solid aliceblue;
+        }
+        
+        #status span{
+            margin: 0 2px;
+        }
+
+        .currentPC{
+            border: 1px solid white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <div>
+            <div id="memory-view">
+                <div id="address-column">
+
+                </div>
+                <div id="ram">
+
+                </div>
+            </div>
+            <br />
+            <div id="rom-view">
+                <div id="rom-address-column">
+
+                </div>
+                <div id="rom">
+
+                </div>
+            </div>
+        </div>
+        <div id="cpu-view">
+            <p>STATUS: <span id="status"></span></p>
+            <p>PC: <span id="pc"></span></p>
+            <p>A: <span id="accum"></span></p>
+            <p>X: <span id="x-reg"></span></p>
+            <p>Y: <span id="y-reg"></span></p>
+            <p>STACK: <span id="stackptr"></span></p>
+            <p>CLOCK: <span id="clock"></span></p>
+            <p>CYCLES: <span id="cycles"></span></p>
+            <br />
+            <div id="instructions-view">
+                <p>CURRENT INSTRUCTION: <span id="curr-ins"></span></p>
+            </div>
+            <div>
+                <button onclick="do_clock()">CLOCK</button>
+                <button onclick="do_reset()">RESET</button>
+            </div>
+        </div>
+        <div id="object-loader">
+            <textarea id="object-string">
+            </textarea>
+            <button onclick="loadObjectString()">LOAD</button>
+        </div>
+    </div>
+    <script src="cpu/bus.js"></script>
+    <script src="cpu/instructions.js"></script>
+    <script src="cpu/6502.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
