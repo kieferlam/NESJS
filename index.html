@@ -4,6 +4,7 @@
 <head>
     <title>NES Emulator</title>
     <style>
+
         body {
             background: #333;
             color: aliceblue;
@@ -13,6 +14,10 @@
 
         p {
             margin: 0;
+        }
+
+        canvas{
+            border: 1px solid white;
         }
 
         .red{
@@ -97,17 +102,32 @@
             <div>
                 <button onclick="do_clock()">CLOCK</button>
                 <button onclick="do_reset()">RESET</button>
+                <button onclick="toggle_run(this)">START</button>
             </div>
         </div>
         <div id="object-loader">
             <textarea id="object-string">
             </textarea>
             <button onclick="loadObjectString()">LOAD</button>
+            <div id="cartridge">
+                <label>LOAD CARTRIDGE</label><input type="file" value="LOAD CARTIDGE" onchange="loadCartridge(this)" />
+            </div>
+            <div id="display">
+                <canvas id="display-canvas" width="256" height="240"></canvas>
+            </div>
+            <div id="palette">
+                <canvas id="sprite-canvas" width="128" height="128"></canvas>
+            </div>
         </div>
     </div>
+    <script src="util/util.js"></script>
+    <script src="util/stream.js"></script>
     <script src="cpu/bus.js"></script>
     <script src="cpu/instructions.js"></script>
     <script src="cpu/6502.js"></script>
+    <script src="cpu/mapper.js"></script>
+    <script src="cpu/cartridge.js"></script>
+    <script src="cpu/ppu.js"></script>
     <script src="main.js"></script>
 </body>
 

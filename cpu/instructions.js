@@ -77,19 +77,19 @@ class InstructionSet {
                 return 0;
             } },
             BCC: { mnemonic: "BCC", func: function (instruction) { 
-                if(!ins.cpu.get_flag(C)){
+                if(!ins.cpu.get_flag(FLAGS6502.C)){
                     Branch();
                 }
                 return 0;
             } },
             BCS: { mnemonic: "BCS", func: function (instruction) { 
-                if(ins.cpu.get_flag(C)){
+                if(ins.cpu.get_flag(FLAGS6502.C)){
                     Branch();
                 }
                 return 0;
             } },
             BEQ: { mnemonic: "BEQ", func: function (instruction) { 
-                if(ins.cpu.get_flag(Z)){
+                if(ins.cpu.get_flag(FLAGS6502.Z)){
                     Branch();
                 }
                 return 0;
@@ -192,6 +192,7 @@ class InstructionSet {
             DEC: { mnemonic: "DEC", func: function (instruction) { 
                 ins.cpu.fetch();
                 var result = ins.cpu.fetched - 1;
+                if(result < 0) result = 0xFF;
                 ins.cpu.write(ins.cpu.addr_abs, _8bit(result));
                 ins.cpu.set_flag(FLAGS6502.Z, !_8bit(result));
                 ins.cpu.set_flag(FLAGS6502.N, result & 0x80);
@@ -199,12 +200,14 @@ class InstructionSet {
             } },
             DEX: { mnemonic: "DEX", func: function (instruction) { 
                 ins.cpu.x--;
+                if(ins.cpu.x < 0) ins.cpu.x = 0xFF;
                 ins.cpu.set_flag(FLAGS6502.Z, ins.cpu.x == 0);
                 ins.cpu.set_flag(FLAGS6502.N, ins.cpu.x & 0x80);
                 return 0;
             } },
             DEY: { mnemonic: "DEY", func: function (instruction) { 
                 ins.cpu.y--;
+                if(ins.cpu.y < 0) ins.cpu.y = 0xFF;
                 ins.cpu.set_flag(FLAGS6502.Z, ins.cpu.y == 0);
                 ins.cpu.set_flag(FLAGS6502.N, ins.cpu.y & 0x80);
                 return 0;
@@ -226,14 +229,14 @@ class InstructionSet {
             } },
             INX: { mnemonic: "INX", func: function (instruction) { 
                 ins.cpu.x++;
-                ins.cpu.set_flag(FLAGS6502.Z, !x);
-                ins.cpu.set_flag(FLAGS6502.N, x & 0x80);
+                ins.cpu.set_flag(FLAGS6502.Z, !ins.cpu.x);
+                ins.cpu.set_flag(FLAGS6502.N, ins.cpu.x & 0x80);
                 return 0;
             } },
             INY: { mnemonic: "INY", func: function (instruction) { 
                 ins.cpu.y++;
-                ins.cpu.set_flag(FLAGS6502.Z, !y);
-                ins.cpu.set_flag(FLAGS6502.N, y & 0x80);
+                ins.cpu.set_flag(FLAGS6502.Z, !ins.cpu.y);
+                ins.cpu.set_flag(FLAGS6502.N, ins.cpu.y & 0x80);
                 return 0;
             } },
             JMP: { mnemonic: "JMP", func: function (instruction) { 
@@ -476,14 +479,14 @@ class InstructionSet {
                 var hi = ins.cpu.readPcAndInc();
                 ins.cpu.addr_abs = (hi << 8) | lo;
                 ins.cpu.addr_abs += ins.cpu.x;
-                return ((addr_abs & 0xFF00) != (hi << 8));
+                return ((ins.cpu.addr_abs & 0xFF00) != (hi << 8));
             },
             ABSY(instruction) {
                 var lo = ins.cpu.readPcAndInc();
                 var hi = ins.cpu.readPcAndInc();
                 ins.cpu.addr_abs = (hi << 8) | lo;
                 ins.cpu.addr_abs += ins.cpu.y;
-                return ((addr_abs & 0xFF00) != (hi << 8));
+                return ((ins.cpu.addr_abs & 0xFF00) != (hi << 8));
             },
             Implied(instruction) {
                 ins.cpu.fetched = ins.cpu.accumulator;
